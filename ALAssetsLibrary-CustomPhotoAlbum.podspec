@@ -8,4 +8,5 @@ Pod::Spec.new do |s|
   s.source       = { :git => 'https://github.com/Kjuly/ALAssetsLibrary-CustomPhotoAlbum.git', :tag => '34a25b6bf0473ce7ef8ad7acd214141d6ba636d7' }
   s.platform     = :ios, '4.0'
   s.source_files = 'ALAssetsLibrary-CustomPhotoAlbum/*.{h,m}'
+  s.requires_arc = true
 end
