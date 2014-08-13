@@ -50,7 +50,7 @@
                                                              completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
                                                                 failure:(ALAssetsLibraryAccessFailureBlock)failure
 {
-  return Block_copy(^(NSURL *assetURL, NSError *error) {
+  return [^(NSURL *assetURL, NSError *error) {
     // Run the completion block for writing image to saved
     //   photos album
     //if (completion) completion(assetURL, error);
@@ -67,7 +67,7 @@
               toAlbum:albumName
            completion:completion
               failure:failure];
-  });
+  } copy];
 }
 
 - (ALAssetsLibraryAssetForURLResultBlock)_assetForURLResultBlockWithGroup:(ALAssetsGroup *)group
@@ -75,7 +75,7 @@
                                                                completion:(ALAssetsLibraryWriteImageCompletionBlock)completion
                                                                   failure:(ALAssetsLibraryAccessFailureBlock)failure
 {
-  return Block_copy(^(ALAsset *asset) {
+  return [^(ALAsset *asset) {
     // Add photo to the target album
     if ([group addAsset:asset]) {
       // Run the completion block if the asset was added successfully
@@ -89,7 +89,7 @@
                                   code:0
                               userInfo:@{NSLocalizedDescriptionKey : message}]);
     }
-  });
+  } copy];
 }
 
 #pragma mark - Public Method
