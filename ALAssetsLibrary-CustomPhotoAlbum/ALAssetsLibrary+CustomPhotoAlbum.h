@@ -75,5 +75,9 @@
  */
 - (void)loadImagesFromAlbum:(NSString *)albumName
          detailedCompletion:(void (^)(NSUInteger index, NSUInteger total, NSURL *assetURL, CGSize dimensions, UIImage* (^loadImage)(), NSError *error))detailedCompletion;
-         
+
+- (void) loadImage:(NSURL*)url
+        completion:(void (^)(UIImage *image))completion
+           failure:(void (^)())failure;
+
 @end
