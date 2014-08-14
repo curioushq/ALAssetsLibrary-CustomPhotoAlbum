@@ -250,4 +250,50 @@
                     failureBlock:failureBlock];
 }
 
+
+- (void)loadImagesFromAlbum:(NSString *)albumName
+         detailedCompletion:(void (^)(NSUInteger index, NSUInteger total, NSURL *assetURL, CGSize dimensions, UIImage* (^loadImage)(), NSError *error))detailedCompletion;
+{
+    ALAssetsLibraryGroupsEnumerationResultsBlock block = ^(ALAssetsGroup *group, BOOL *stop) {
+        // Checking if library exists
+        if (group == nil) *stop = YES;
+
+        // If we have found library with given title we enumerate it
+        if ([albumName compare:[group valueForProperty:ALAssetsGroupPropertyName]] == NSOrderedSame) {
+            [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+                // Checking if group isn't empty
+                if (! result) return;
+
+                ALAssetRepresentation *representation = [result defaultRepresentation];
+                NSURL *url = representation.url;
+                CGSize dimensions = [representation dimensions];
+
+                // Getting the image from the asset
+                UIImage *(^loadImage)() = ^UIImage*() {
+                    UIImageOrientation orientation =
+                    (UIImageOrientation)[[result valueForProperty:@"ALAssetPropertyOrientation"] intValue];
+                    UIImage * image = [UIImage imageWithCGImage:[representation fullScreenImage]
+                                                          scale:1.0
+                                                    orientation:orientation];
+                    return image;
+                };
+
+                detailedCompletion(index, group.numberOfAssets, url, dimensions, loadImage, nil);
+            }];
+
+            // Album was found, bail out of the method
+            *stop = YES;
+        }
+    };
+
+    ALAssetsLibraryAccessFailureBlock failureBlock = ^(NSError *error) {
+        NSLog(@"%s: %@", __PRETTY_FUNCTION__, [error localizedDescription]);
+        if (detailedCompletion) detailedCompletion(0, 0, nil, CGSizeZero, nil, error);
+    };
+    
+    [self enumerateGroupsWithTypes:ALAssetsGroupAll
+                        usingBlock:block
+                      failureBlock:failureBlock];
+}
+
 @end

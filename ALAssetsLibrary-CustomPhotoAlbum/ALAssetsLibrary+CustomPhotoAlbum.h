@@ -68,4 +68,12 @@
 - (void)loadImagesFromAlbum:(NSString *)albumName
                  completion:(void (^)(NSMutableArray *images, NSError *error))completion;
 
+/*! Loads assets from the assets group (album) with more details and a callback for each item
+ *
+ * \param albumName Custom album name
+ * \param completion Block to be executed when succeed or failed to load images from target album
+ */
+- (void)loadImagesFromAlbum:(NSString *)albumName
+         detailedCompletion:(void (^)(NSUInteger index, NSUInteger total, NSURL *assetURL, CGSize dimensions, UIImage* (^loadImage)(), NSError *error))detailedCompletion;
+         
 @end
