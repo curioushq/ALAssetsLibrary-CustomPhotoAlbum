@@ -296,4 +296,32 @@
                       failureBlock:failureBlock];
 }
 
+
+- (void) loadImage:(NSURL*)url
+        completion:(void (^)(UIImage *image))completion
+           failure:(void (^)())failure
+{
+    ALAssetsLibraryAssetForURLResultBlock resultBlock = ^(ALAsset *result)
+    {
+        ALAssetRepresentation *representation = [result defaultRepresentation];
+        UIImageOrientation orientation =
+        (UIImageOrientation)[[result valueForProperty:@"ALAssetPropertyOrientation"] intValue];
+        UIImage * image = [UIImage imageWithCGImage:[representation fullScreenImage]
+                                              scale:1.0
+                                        orientation:orientation];
+        completion(image);
+    };
+
+    ALAssetsLibraryAccessFailureBlock failureBlock  = ^(NSError *error)
+    {
+        NSLog(@"Can't get image - %@",[error localizedDescription]);
+        failure();
+    };
+
+
+    [self assetForURL:url resultBlock:resultBlock failureBlock:failureBlock];
+}
+
+
+
 @end
